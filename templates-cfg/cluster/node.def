@@ -1,0 +1,2 @@
+help: "Configure clustering"
+end: "sudo /opt/vyatta/sbin/vyatta-update-cluster.pl"

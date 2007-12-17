@@ -1,0 +1,4 @@
+#!/bin/bash
+
+update-rc.d -f heartbeat remove >/dev/null
+

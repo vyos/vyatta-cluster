@@ -1,0 +1,6 @@
+The Debian Package vyatta-cluster
+----------------------------
+
+This package has the Vyatta configuration and operational templates and scripts for clustering.
+
+ -- An-Cheng Huang <ancheng@vyatta.com>  Fri, 14 Dec 2007 17:02:02 -0700

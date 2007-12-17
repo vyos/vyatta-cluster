@@ -1,0 +1,3 @@
+type: u32
+help: "Time interval between heartbeat packets (seconds)"
+default: 5

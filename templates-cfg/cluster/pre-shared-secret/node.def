@@ -1,0 +1,2 @@
+type: txt
+help: "Pre-shared secret for authentication between cluster nodes"

@@ -1,0 +1,3 @@
+multi:
+type: txt
+help: "Interface(s) for sending/receiving heartbeat packets"
