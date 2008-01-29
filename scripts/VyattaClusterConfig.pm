@@ -229,6 +229,27 @@ EOS
   return ($str, undef);
 }
 
+sub isValidIPSpec {
+  my $str = shift;
+  my @comps = split /\//, $str;
+  return 0 if ($#comps > 3);
+  return 0 if (!isValidIPv4($comps[0]));
+  # check optional prefix len
+  if (defined($comps[1])) {
+    return 0 if (!($comps[1] =~ m/^\d+$/));
+    return 0 if (($comps[1] > 32) || ($comps[1] < 0));
+  }
+  # check optional interface
+  if (defined($comps[2])) {
+    return 0 if (defined(check_interfaces($comps[2])));
+  }
+  # check optional broadcast addr
+  if (defined($comps[3])) {
+    return 0 if (!isValidIPv4($comps[3]));
+  }
+  return 1;
+}
+
 sub isValidIPv4 {
   my $str = shift;
   return 0 if (!($str =~ m/^(\d+)\.(\d+)\.(\d+)\.(\d+)$/));
@@ -263,7 +284,7 @@ sub haresources {
   my @init_services = ();
   my @ip_addresses = ();
   foreach (@{$hashref->{_service}}) {
-    if (!isValidIPv4($_)) {
+    if (!isValidIPSpec($_)) {
       if (isValidService($_)) {
         push @init_services, $_;
       } else {
