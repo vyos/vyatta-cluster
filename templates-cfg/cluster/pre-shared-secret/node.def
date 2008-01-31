@@ -1,2 +1,2 @@
 type: txt
-help: "Pre-shared secret for authentication between cluster nodes"
+help: Pre-shared secret for authentication between cluster nodes
