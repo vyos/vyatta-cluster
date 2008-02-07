@@ -1,3 +1,10 @@
 multi:
 type: txt
 help: IP address(es) or service name(s) in this resource group
+comp_help: Possible completions:
+  <service name>          Name of system service to be clustered
+  <IP addr>/<prefix len>  IP address (with subnet mask length) to be clustered
+
+For IP addresses, additional parameters can optionally be specified:
+  <IP addr>/<prefix len>/<interface>
+  <IP addr>/<prefix len>/<interface>/<broadcast addr>

@@ -4,9 +4,11 @@ use strict;
 use lib "/opt/vyatta/share/perl5/";
 use VyattaConfig;
 
-my $DEFAULT_INITDEAD = 120;
+my $DEFAULT_INITDEAD = 30000;
+my $DEFAULT_DEADPING = 30000;
 my $DEFAULT_LOG_FACILITY = 'daemon';
 my $SERVICE_DIR = "/etc/init.d";
+my $RESOURCE_SCRIPT_DIR = "/etc/ha.d/resource.d";
 
 my %fields = (
   _interface        => undef,
@@ -198,7 +200,7 @@ sub ha_cf {
           "dead interval must be more than twice the keepalive interval")
     if ($ditvl <= (2 * $kitvl));
   return (undef,
-          "dead interval must be smaller than $DEFAULT_INITDEAD seconds")
+          "dead interval must be smaller than $DEFAULT_INITDEAD milliseconds")
     if ($ditvl >= $DEFAULT_INITDEAD);
   return (undef,
           "the current node '$my_name' is not defined in the configuration")
@@ -215,11 +217,15 @@ sub ha_cf {
     $wtime = $ditvl;
   }
 
+  # convert to seconds (HA calls "sleep" with this)
+  $ditvl /= 1000;
+
   my $str =<<EOS;
-keepalive $kitvl
-deadtime $ditvl
-warntime $wtime
-initdead $DEFAULT_INITDEAD
+keepalive ${kitvl}ms
+deadtime ${ditvl}
+warntime ${wtime}ms
+initdead ${DEFAULT_INITDEAD}ms
+deadping ${DEFAULT_DEADPING}ms
 logfacility $DEFAULT_LOG_FACILITY
 bcast $interfaces
 auto_failback $auto_failback
@@ -232,6 +238,7 @@ EOS
 sub isValidIPSpec {
   my $str = shift;
   my @comps = split /\//, $str;
+  return 0 if ($#comps < 1);
   return 0 if ($#comps > 3);
   return 0 if (!isValidIPv4($comps[0]));
   # check optional prefix len
@@ -262,6 +269,11 @@ sub isValidIPv4 {
 my @service_list = ();
 sub isValidService {
   my $service = shift;
+  if ($service =~ /^([^:]+)::/) {
+    my $script = $1;
+    return 0 if (! -e "$RESOURCE_SCRIPT_DIR/$script");
+    return 1;
+  }
   if (scalar(@service_list) == 0) {
     opendir(SDIR, "$SERVICE_DIR")
       or (print STDERR "Error: can't open $SERVICE_DIR" && return 0);
@@ -288,10 +300,11 @@ sub haresources {
       if (isValidService($_)) {
         push @init_services, $_;
       } else {
-        return (undef, "\"$_\" is not a valid IP address or service name");
+        return (undef, "\"$_\" is not a valid IP address "
+                       . "(with subnet mask length) or service name");
       }
     } else {
-      push @ip_addresses, $_;
+      push @ip_addresses, "IPaddr2::$_";
     }
   }
   # this forces all ip addresses to be before all services, which may not
