@@ -1,3 +1,19 @@
+vyatta-cluster (0.2) unstable; urgency=low
+
+  vc4.0.0
+  [ Mark O'Brien ]
+
+
+  [ An-Cheng Huang ]
+  * allow full IP specification (IP/prefix/interface/broadcast) for
+    cluster
+  * convert templates to new syntax
+  * * fix for bug 2769: allow resource script as service.
+
+  [ Mark O'Brien ]
+
+ -- Mark O'Brien <mobrien@vyatta.com>  Mon, 25 Feb 2008 17:38:47 -0800
+
 vyatta-cluster (0.1) unstable; urgency=low
 
   * Initial Release.
