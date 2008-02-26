@@ -1,2 +1,2 @@
 help: Show the current clustering status
-run: sudo ${vyatta_bindir}/sudo-users/vyatta-show-cluster.pl
+run: ${vyatta_sbindir}/vyatta-show-cluster.pl
