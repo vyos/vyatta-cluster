@@ -10,8 +10,14 @@ my $DEFAULT_LOG_FACILITY = 'daemon';
 my $SERVICE_DIR = "/etc/init.d";
 my $RESOURCE_SCRIPT_DIR = "/etc/ha.d/resource.d";
 
+# for heartbeat
+my $DEFAULT_MCAST_GROUP = '239.251.252.253';
+my $DEFAULT_UDP_PORT = '694';
+my $DEFAULT_TTL = '1';
+
 my %fields = (
   _interface        => undef,
+  _mcast_grp        => undef,
   _pre_shared       => undef,
   _keepalive_itvl   => undef,
   _dead_itvl        => undef,
@@ -45,6 +51,7 @@ sub setup {
 
   my @tmp = $config->returnValues("interface");
   $self->{_interface} = [ @tmp ];
+  $self->{_mcast_grp} = $config->returnValue("mcast-group");
   $self->{_pre_shared} = $config->returnValue("pre-shared-secret");
   $self->{_keepalive_itvl} = $config->returnValue("keepalive-interval");
   $self->{_dead_itvl} = $config->returnValue("dead-interval");
@@ -84,6 +91,7 @@ sub setupOrig {
 
   my @tmp = $config->returnOrigValues("interface");
   $self->{_interface} = [ @tmp ];
+  $self->{_mcast_grp} = $config->returnOrigValue("mcast-group");
   $self->{_pre_shared} = $config->returnOrigValue("pre-shared-secret");
   $self->{_keepalive_itvl} = $config->returnOrigValue("keepalive-interval");
   $self->{_dead_itvl} = $config->returnOrigValue("dead-interval");
@@ -174,7 +182,14 @@ sub ha_cf {
   if (defined($ierr)) {
     return (undef, $ierr);
   }
-  my $interfaces = join " ", @{$self->{_interface}};
+  my $interfaces = '';
+  foreach my $intf (@{$self->{_interface}}) {
+    $interfaces .= "mcast $intf ";
+    $interfaces .= ((defined($self->{_mcast_grp}))
+                    ?  "$self->{_mcast_grp} " : "$DEFAULT_MCAST_GROUP ");
+    $interfaces .= "$DEFAULT_UDP_PORT $DEFAULT_TTL 0\n";
+  }
+
   my $kitvl = $self->{_keepalive_itvl};
   my $ditvl = $self->{_dead_itvl};
 
@@ -227,8 +242,7 @@ warntime ${wtime}ms
 initdead ${DEFAULT_INITDEAD}ms
 deadping ${DEFAULT_DEADPING}ms
 logfacility $DEFAULT_LOG_FACILITY
-bcast $interfaces
-auto_failback $auto_failback
+${interfaces}auto_failback $auto_failback
 node $primary $secondaries[0]$monitor_str
 EOS
 

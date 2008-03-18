@@ -1,0 +1,4 @@
+type: ipv4
+help: Multicast group for sending/receiving heartbeat packets
+syntax:expression: pattern $VAR(@) "^239\."
+                   ; "Heartbeat multicast group must be \"239.*.*.*\""
