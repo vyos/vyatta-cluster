@@ -8,6 +8,7 @@ Standards-Version: 3.7.2
 Package: vyatta-cluster
 Architecture: all
 Depends: vyatta-cfg,
+ vyatta-bash,
  vyatta-op,
  heartbeat(>=2.1.2-1)
 Description: Vyatta configuration/operational commands for clustering
