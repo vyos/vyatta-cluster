@@ -14,10 +14,11 @@ if ($config->isEmpty()) {
   # config is empty => deleted.
   # shutdown clustering.
   system("$HA_INIT stop");
+  
+  $config->del_watchlink_exclude();
+
   exit 0;
 }
-
-open(OUT, ">>/tmp/cl.log") or exit 1;
 
 my ($authkeys, $haresources, $ha_cf, $err, @init_services);
 while (1) {
@@ -62,6 +63,9 @@ if (!chmod(0600, "$HA_DIR/authkeys")) {
   exit 1;
 }
 
+$config->del_watchlink_exclude();
+$config->add_watchlink_exclude();
+
 # stop each service in case it is already started
 foreach (@init_services) {
   system("$SERVICE_DIR/$_ stop");
@@ -73,6 +77,5 @@ foreach (@init_services) {
 system("$HA_INIT stop");
 system("$HA_INIT start");
 
-close OUT;
 exit 0;
 
