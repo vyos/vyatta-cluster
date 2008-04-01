@@ -318,7 +318,7 @@ sub haresources {
                        . "(with subnet mask length) or service name");
       }
     } else {
-      push @ip_addresses, "IPaddr2::$_";
+      push @ip_addresses, "IPaddr2-vyatta::$_";
     }
   }
   # this forces all ip addresses to be before all services, which may not
