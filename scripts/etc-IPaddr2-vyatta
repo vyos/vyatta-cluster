@@ -62,7 +62,7 @@ if [ ! -z "$str" ]; then
     esac
 fi
 
-OCF_TYPE=IPaddr2
+OCF_TYPE=IPaddr2-vyatta
 OCF_RESKEY_lvs_support=1
 OCF_RESOURCE_INSTANCE=${OCF_TYPE}_$BASEIP
 export OCF_TYPE OCF_RESOURCE_INSTANCE OCF_RESKEY_lvs_support
