@@ -74,8 +74,15 @@ foreach (@init_services) {
 # restart clustering.
 # using "stop" + "start" ("restart" will cause a long wait).
 # (may need to change to "restart".)
-system("$HA_INIT stop");
-system("$HA_INIT start");
-
+print "Starting clustering...";
+system("$HA_INIT stop >&/dev/null");
+system("$HA_INIT start >&/dev/null");
+if ($? >> 8) {
+  print "\nError: Clustering failed to start.\n";
+  print "Please make sure all clustering interfaces are functional\n";
+  print "and retry the commit.\n";
+  exit 1;
+}
+print " Done\n";
 exit 0;
 

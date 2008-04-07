@@ -169,6 +169,14 @@ sub check_interfaces {
     if ($? >> 8) {
       return "interface $_ does not exist";
     }
+    my $link = `ip link show $_ | grep $_`;
+    if (($link =~ /NO-CARRIER/) || !($link =~ /,UP/)) {
+      return "interface $_ is not connected";
+    }
+    system("ip addr show dev $_ |grep 'inet ' |grep -q 'scope global'");
+    if ($? >> 8) {
+      return "interface $_ is not configured";
+    }
   }
   return undef;
 }
