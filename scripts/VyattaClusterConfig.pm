@@ -163,12 +163,14 @@ EOS
 }
 
 sub check_interfaces {
-  my @interfaces = @_;
+  my ($exist_only, @interfaces) = @_;
   foreach (@interfaces) {
     system("ip addr show $_ >& /dev/null");
     if ($? >> 8) {
       return "interface $_ does not exist";
     }
+    next if ($exist_only);
+
     my $link = `ip link show $_ | grep $_`;
     if (($link =~ /NO-CARRIER/) || !($link =~ /,UP/)) {
       return "interface $_ is not connected";
@@ -188,7 +190,7 @@ sub ha_cf {
   return (undef, "using multiple resource groups is not supported yet")
     if ($#groups > 0);
 
-  my $ierr = check_interfaces(@{$self->{_interface}});
+  my $ierr = check_interfaces(0, @{$self->{_interface}});
   if (defined($ierr)) {
     return (undef, $ierr);
   }
@@ -272,7 +274,7 @@ sub isValidIPSpec {
   }
   # check optional interface
   if (defined($comps[2])) {
-    return 0 if (defined(check_interfaces($comps[2])));
+    return 0 if (defined(check_interfaces(1, $comps[2])));
   }
   # check optional broadcast addr
   if (defined($comps[3])) {
