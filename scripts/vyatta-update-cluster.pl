@@ -40,6 +40,11 @@ if ($ret >> 8) {
   exit 1;
 }
 
+# stop HA before changing config files
+print "Stopping clustering...";
+system("$HA_INIT stop >&/dev/null");
+print " Done\n";
+
 if (!open(CONF_AUTH, ">$HA_DIR/authkeys")) {
   print STDERR "Error: cannot create $HA_DIR/authkeys\n";
   exit 1;
@@ -71,11 +76,7 @@ foreach (@init_services) {
   system("$SERVICE_DIR/$_ stop");
 }
 
-# restart clustering.
-# using "stop" + "start" ("restart" will cause a long wait).
-# (may need to change to "restart".)
 print "Starting clustering...";
-system("$HA_INIT stop >&/dev/null");
 system("$HA_INIT start >&/dev/null");
 if ($? >> 8) {
   print "\nError: Clustering failed to start.\n";
