@@ -1,3 +1,17 @@
+vyatta-cluster (0.5) unstable; urgency=low
+
+  VC4.0.2
+  [ Mark O'Brien ]
+
+
+  [ An-Cheng Huang ]
+  * fix for bugs 2970, 3109, 3110:
+  * fix for bug 3147: stop HA before changing HA config files.
+
+  [ Mark O'Brien ]
+
+ -- Mark O'Brien <mobrien@vyatta.com>  Wed, 16 Apr 2008 09:50:10 -0700
+
 vyatta-cluster (0.4) unstable; urgency=low
 
   3.0.2
