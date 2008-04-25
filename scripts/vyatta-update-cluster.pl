@@ -15,8 +15,6 @@ if ($config->isEmpty()) {
   # shutdown clustering.
   system("$HA_INIT stop");
   
-  $config->del_watchlink_exclude();
-
   exit 0;
 }
 
@@ -67,9 +65,6 @@ if (!chmod(0600, "$HA_DIR/authkeys")) {
   print STDERR "Error: cannot change $HA_DIR/authkeys permissions\n";
   exit 1;
 }
-
-$config->del_watchlink_exclude();
-$config->add_watchlink_exclude();
 
 # stop each service in case it is already started
 foreach (@init_services) {
