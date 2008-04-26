@@ -348,37 +348,6 @@ EOS
   return ($str, undef, @init_services);
 }
 
-sub del_watchlink_exclude {
-  my $self = shift;
-  my $cmd = '/opt/vyatta/sbin/vyatta-watchlink-exclude.pl '
-            . "--id=$HA_WATCHLINK_ID --action=remove >&/dev/null";
-  system($cmd);
-}
-
-sub add_watchlink_exclude {
-  my $self = shift;
-  my $bcmd = '/opt/vyatta/sbin/vyatta-watchlink-exclude.pl '
-             . "--id=$HA_WATCHLINK_ID --action=add --intf='*'";
-  my @groups = keys %{$self->{_groups}};
-  my $hashref = $self->{_groups}->{$groups[0]};
-  my @ip_addresses = ();
-  foreach (@{$hashref->{_service}}) {
-    if (isValidIPSpec($_)) {
-      my $ip = (/^([^\/]+)\//) ? $1 : $_;
-      push @ip_addresses, $ip;
-    }
-  }
-  return if (scalar(@ip_addresses) <= 0);
-
-  my $last_ip = pop @ip_addresses;
-  foreach (@ip_addresses) {
-    my $cmd = "$bcmd --ipadd=$_";
-    system($cmd);
-  }
-  my $cmd = "$bcmd --ipadd=$last_ip --signal";
-  system($cmd);
-}
-
 sub print_str {
   my ($self) = @_;
   my $str = "cluster";
