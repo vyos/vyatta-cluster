@@ -13,6 +13,7 @@
 /debian/vyatta-cluster
 /debian/vyatta-cluster.postinst
 /debian/vyatta-cluster.postrm
+/debian/vyatta-cluster.debhelper.log
 /INSTALL
 /Makefile.in
 /Makefile
