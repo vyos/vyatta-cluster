@@ -1,3 +1,20 @@
+vyatta-cluster (0.10) unstable; urgency=low
+
+	  3.1.0
+  [ Mark O'Brien ]
+
+
+  [ rbalocca ]
+  * Ignore derived files
+  * Convert to our method of changelog creation
+
+  [ Mohit Mehta ]
+  * Fix Bug 3069 Help strings should be standardized
+
+  [ Mark O'Brien ]
+
+ -- Mark O'Brien <mobrien@firebolt.vyatta.com>  Tue, 17 Jun 2008 09:26:39 -0700
+
 vyatta-cluster (0.9) unstable; urgency=low
 
   3.0.5
