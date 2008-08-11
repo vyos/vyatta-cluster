@@ -6,6 +6,8 @@ use VyattaConfig;
 
 my $DEFAULT_INITDEAD = 30000;
 my $DEFAULT_DEADPING = 30000;
+my $MIN_DEAD = 300;
+my $MIN_KEEP = 100;
 my $DEFAULT_LOG_FACILITY = 'daemon';
 my $SERVICE_DIR = "/etc/init.d";
 my $RESOURCE_SCRIPT_DIR = "/etc/ha.d/resource.d";
@@ -223,6 +225,12 @@ sub ha_cf {
     if ($#secondaries < 0);
   return (undef, "using multiple secondary nodes is not supported yet")
     if ($#secondaries > 0);
+  return (undef,
+          "dead interval must be at least $MIN_DEAD milliseconds")
+    if ($ditvl < $MIN_DEAD);
+  return (undef,
+          "keepalive interval must be at least $MIN_KEEP milliseconds")
+    if ($kitvl < $MIN_KEEP);
   return (undef,
           "dead interval must be more than twice the keepalive interval")
     if ($ditvl <= (2 * $kitvl));
