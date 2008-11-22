@@ -1,8 +1,8 @@
-package VyattaClusterConfig;
+package Vyatta::Cluster::Config;
 
 use strict;
-use lib "/opt/vyatta/share/perl5/";
-use VyattaConfig;
+use lib "/opt/vyatta/share/perl5";
+use Vyatta::Config;
 
 my $DEFAULT_INITDEAD = 30000;
 my $DEFAULT_DEADPING = 30000;
@@ -42,7 +42,7 @@ sub new {
 
 sub setup {
   my ( $self, $level ) = @_;
-  my $config = new VyattaConfig;
+  my $config = new Vyatta::Config;
 
   $config->setLevel("$level");
   my @nodes = $config->listNodes();
@@ -82,7 +82,7 @@ sub setup {
 
 sub setupOrig {
   my ( $self, $level ) = @_;
-  my $config = new VyattaConfig;
+  my $config = new Vyatta::Config;
 
   $config->setLevel("$level");
   my @nodes = $config->listOrigNodes();
@@ -377,4 +377,3 @@ sub print_str {
 }
 
 1;
-

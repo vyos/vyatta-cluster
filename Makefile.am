@@ -1,6 +1,6 @@
 cfgdir = $(datadir)/vyatta-cfg/templates
 opdir = $(datadir)/vyatta-op/templates
-share_perl5dir = $(datadir)/perl5
+share_perl5dir = $(datadir)/perl5/Vyatta/Cluster
 curverdir = $(sysconfdir)/config-migrate/current
 
 etc_ha_resourcedir = /etc/ha.d/resource.d
@@ -9,7 +9,7 @@ lib_ocf_resourcedir = /usr/lib/ocf/resource.d/heartbeat
 sbin_SCRIPTS = scripts/vyatta-update-cluster.pl
 sbin_SCRIPTS += scripts/vyatta-show-cluster.pl
 
-share_perl5_DATA = scripts/VyattaClusterConfig.pm
+share_perl5_DATA = lib/Vyatta/Cluster/Config.pm
 curver_DATA = cfg-version/cluster@1
 
 cpiop = find  . ! -regex '\(.*~\|.*\.bak\|.*\.swp\|.*\#.*\#\)' -print0 | \

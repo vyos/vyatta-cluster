@@ -1,8 +1,8 @@
 #!/usr/bin/perl
 
 use strict;
-use lib "/opt/vyatta/share/perl5/";
-use VyattaClusterConfig;
+use lib "/opt/vyatta/share/perl5";
+use Vyatta::Cluster::Config;
 
 my $HA_DIR = "/etc/ha.d";
 my $HA_INIT = "/etc/init.d/heartbeat";
