@@ -1,3 +1,16 @@
+vyatta-cluster (0.11) unstable; urgency=low
+
+	  3.2.0
+  [ Mark O'Brien ]
+
+
+  [ An-Cheng Huang ]
+  * fix for bug 3560: add lower limits for intervals
+
+  [ Mark O'Brien ]
+
+ -- Mark O'Brien <mobrien@firebolt.vyatta.com>  Tue, 25 Nov 2008 19:09:38 -0800
+
 vyatta-cluster (0.10) unstable; urgency=low
 
 	  3.1.0
