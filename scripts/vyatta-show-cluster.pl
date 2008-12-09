@@ -6,7 +6,7 @@ use Vyatta::Cluster::Config;
 
 my $CL_STATUS = "/usr/bin/cl_status";
 
-my $config = new VyattaClusterConfig;
+my $config = new Vyatta::Cluster::Config;
 $config->setupOrig("cluster");
 if ($config->isEmpty()) {
   # config is empty.

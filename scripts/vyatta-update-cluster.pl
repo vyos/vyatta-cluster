@@ -8,7 +8,7 @@ my $HA_DIR = "/etc/ha.d";
 my $HA_INIT = "/etc/init.d/heartbeat";
 my $SERVICE_DIR = "/etc/init.d";
 
-my $config = new VyattaClusterConfig;
+my $config = new Vyatta::Cluster::Config;
 $config->setup("cluster");
 if ($config->isEmpty()) {
   # config is empty => deleted.
