@@ -332,6 +332,15 @@ sub haresources {
   foreach (@{$hashref->{_service}}) {
     if (!isValidIPSpec($_)) {
       if (isValidService($_)) {
+	if ($_ eq 'ipsec') {
+	  # check if ipsec is configured
+	  my $config = new Vyatta::Config;
+	  $config->setLevel('vpn');
+	  my @nodes = $config->listOrigPlusComNodes();
+	  if (! grep(/^ipsec$/, @nodes)) {
+	    return (undef, "ipsec is not configured");
+	  }
+	}
         push @init_services, $_;
       } else {
         return (undef, "\"$_\" is not a valid IP address "
