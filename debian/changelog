@@ -1,3 +1,9 @@
+vyatta-cluster (0.11.4) unstable; urgency=low
+
+  * updated priority node.def for project
+
+ -- slioch <slioch@eng-140.vyatta.com>  Wed, 21 Oct 2009 14:55:12 -0700
+
 vyatta-cluster (0.11.3) unstable; urgency=low
 
   * Fix 4623: Removing IPSEC VPN config without removing cluster ipsec
