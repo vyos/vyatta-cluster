@@ -7,7 +7,7 @@ Standards-Version: 3.7.2
 
 Package: vyatta-cluster
 Architecture: all
-Depends: vyatta-cfg,
+Depends: vyatta-cfg (>= 0.15.33),
  vyatta-bash | bash (>= 3.1),
  vyatta-op,
  heartbeat(>=2.1.2-1)
