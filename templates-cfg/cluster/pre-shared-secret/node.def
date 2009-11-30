@@ -1,2 +1,2 @@
 type: txt
-help: Set pre-shared secret for authentication between cluster nodes
+help: Set pre-shared secret for authentication between cluster nodes [REQUIRED]
