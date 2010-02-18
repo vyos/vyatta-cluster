@@ -1,3 +1,9 @@
+vyatta-cluster (0.11.7) unstable; urgency=low
+
+  * UNRELEASED
+
+ -- An-Cheng Huang <ancheng@vyatta.com>  Wed, 17 Feb 2010 16:13:58 -0800
+
 vyatta-cluster (0.11.6) unstable; urgency=low
 
   * added required keyword to help text.
