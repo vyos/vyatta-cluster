@@ -1,5 +1,6 @@
 #!/usr/bin/perl
 
+use Getopt::Long;
 use strict;
 use lib "/opt/vyatta/share/perl5";
 use Vyatta::Cluster::Config;
@@ -8,13 +9,28 @@ my $HA_DIR = "/etc/ha.d";
 my $HA_INIT = "/etc/init.d/heartbeat";
 my $SERVICE_DIR = "/etc/init.d";
 
+my $conntrackd_service = undef;
+GetOptions("conntrackd_service=s"         => \$conntrackd_service,
+);
+
 my $config = new Vyatta::Cluster::Config;
 $config->setup("cluster");
 if ($config->isEmpty()) {
+
+  # check if conntrack-sync is using clustering as failover-mechanism
+  my $vconfig = new Vyatta::Config;
+  $vconfig->setLevel('service conntrack-sync failover-mechanism');
+  my @nodes = $vconfig->listNodes();
+  if (grep(/^cluster$/, @nodes)) {
+    print STDERR "cluster is being used as failover-mechanism in conntrack-sync\n";
+    exit 1;
+  }
+
   # config is empty => deleted.
   # shutdown clustering.
-  system("$HA_INIT stop");
-  
+  print "Stopping clustering...";
+  system("$HA_INIT stop >&/dev/null");
+  print " Done\n";  
   exit 0;
 }
 
@@ -22,7 +38,11 @@ my ($authkeys, $haresources, $ha_cf, $err, @init_services);
 while (1) {
   ($authkeys, $err) = $config->authkeys();
   last if (!defined($authkeys));
-  ($haresources, $err, @init_services) = $config->haresources();
+  if (defined $conntrackd_service) {
+    ($haresources, $err, @init_services) = $config->haresources("$conntrackd_service") if defined $conntrackd_service;
+  } else {
+    ($haresources, $err, @init_services) = $config->haresources();
+  }
   last if (!defined($haresources));
   ($ha_cf, $err) = $config->ha_cf();
   last;

@@ -3,12 +3,14 @@ opdir = $(datadir)/vyatta-op/templates
 share_perl5dir = $(datadir)/perl5/Vyatta/Cluster
 curverdir = $(sysconfdir)/config-migrate/current
 
+etc_initdir = /etc/init.d/
 etc_ha_resourcedir = /etc/ha.d/resource.d
 lib_ocf_resourcedir = /usr/lib/ocf/resource.d/heartbeat
 
 sbin_SCRIPTS = scripts/vyatta-update-cluster.pl
 sbin_SCRIPTS += scripts/vyatta-show-cluster.pl
 
+etc_init_SCRIPTS = etc/init.d/primary-secondary
 share_perl5_DATA = lib/Vyatta/Cluster/Config.pm
 curver_DATA = cfg-version/cluster@1
 

@@ -5,7 +5,6 @@ use lib "/opt/vyatta/share/perl5";
 use Vyatta::Config;
 
 my $DEFAULT_INITDEAD = 30000;
-my $DEFAULT_DEADPING = 30000;
 my $MIN_DEAD = 300;
 my $MIN_KEEP = 100;
 my $DEFAULT_LOG_FACILITY = 'daemon';
@@ -20,13 +19,14 @@ my $DEFAULT_TTL = '1';
 my $HA_WATCHLINK_ID = 'ha';
 
 my %fields = (
-  _interface        => undef,
-  _mcast_grp        => undef,
-  _pre_shared       => undef,
-  _keepalive_itvl   => undef,
-  _dead_itvl        => undef,
-  _groups           => {},
-  _is_empty         => 1,
+  _interface        	=> undef,
+  _mcast_grp        	=> undef,
+  _pre_shared       	=> undef,
+  _keepalive_itvl   	=> undef,
+  _dead_itvl        	=> undef,
+  _monitor_dead_itvl	=> undef,
+  _groups           	=> {},
+  _is_empty         	=> 1,
 );
 
 sub new {
@@ -59,6 +59,7 @@ sub setup {
   $self->{_pre_shared} = $config->returnValue("pre-shared-secret");
   $self->{_keepalive_itvl} = $config->returnValue("keepalive-interval");
   $self->{_dead_itvl} = $config->returnValue("dead-interval");
+  $self->{_monitor_dead_itvl} = $config->returnValue("monitor-dead-interval");
 
   $config->setLevel("$level group");
   my @groups = $config->listNodes();
@@ -99,6 +100,7 @@ sub setupOrig {
   $self->{_pre_shared} = $config->returnOrigValue("pre-shared-secret");
   $self->{_keepalive_itvl} = $config->returnOrigValue("keepalive-interval");
   $self->{_dead_itvl} = $config->returnOrigValue("dead-interval");
+  $self->{_monitor_dead_itvl} = $config->returnOrigValue("monitor-dead-interval");
 
   $config->setLevel("$level group");
   my @groups = $config->listOrigNodes();
@@ -206,6 +208,7 @@ sub ha_cf {
 
   my $kitvl = $self->{_keepalive_itvl};
   my $ditvl = $self->{_dead_itvl};
+  my $mditvl = $self->{_monitor_dead_itvl};
 
   my $hashref = $self->{_groups}->{$groups[0]};
   my $primary = $hashref->{_primary};
@@ -219,6 +222,7 @@ sub ha_cf {
   return (undef, "heartbeat interface(s) not defined") if ($interfaces eq "");
   return (undef, "keepalive interval not defined") if (!defined($kitvl));
   return (undef, "dead interval not defined") if (!defined($ditvl));
+  return (undef, "monitor dead interval not defined") if (!defined($mditvl));
   return (undef, "cluster primary system not defined")
     if (!defined($primary));
   return (undef, "cluster secondary node(s) not defined")
@@ -229,14 +233,23 @@ sub ha_cf {
           "dead interval must be at least $MIN_DEAD milliseconds")
     if ($ditvl < $MIN_DEAD);
   return (undef,
+          "monitor dead interval must be at least $MIN_DEAD milliseconds")
+    if ($mditvl < $MIN_DEAD);
+  return (undef,
           "keepalive interval must be at least $MIN_KEEP milliseconds")
     if ($kitvl < $MIN_KEEP);
   return (undef,
           "dead interval must be more than twice the keepalive interval")
     if ($ditvl <= (2 * $kitvl));
   return (undef,
+          "monitor dead interval must be more than twice the keepalive interval")
+    if ($mditvl <= (2 * $kitvl));
+  return (undef,
           "dead interval must be smaller than $DEFAULT_INITDEAD milliseconds")
     if ($ditvl >= $DEFAULT_INITDEAD);
+  return (undef,
+          "monitor dead interval must be smaller than $DEFAULT_INITDEAD milliseconds")
+    if ($mditvl >= $DEFAULT_INITDEAD);
   return (undef,
           "the current node '$my_name' is not defined in the configuration")
     if (($my_name ne $primary) && ($my_name ne $secondaries[0]));
@@ -260,7 +273,7 @@ keepalive ${kitvl}ms
 deadtime ${ditvl}
 warntime ${wtime}ms
 initdead ${DEFAULT_INITDEAD}ms
-deadping ${DEFAULT_DEADPING}ms
+deadping ${mditvl}ms
 logfacility $DEFAULT_LOG_FACILITY
 ${interfaces}auto_failback $auto_failback
 node $primary $secondaries[0]$monitor_str
@@ -318,7 +331,7 @@ sub isValidService {
 }
 
 sub haresources {
-  my ($self) = @_;
+  my ($self, $conntrackd_service) = @_;
   my @groups = keys %{$self->{_groups}};
   return (undef, "no resource group defined") if ($#groups < 0);
   return (undef, "using multiple resource groups is not supported yet")
@@ -358,6 +371,15 @@ sub haresources {
   return (undef, "cluster primary system not defined") if (!defined($primary));
   return (undef, "cluster service(s) not defined") if ($services eq "");
 
+
+  # check if conntrack-sync is configured to use clustering
+  my $config = new Vyatta::Config;
+  $config->setLevel('service conntrack-sync failover-mechanism');
+  my @nodes = $config->listOrigPlusComNodes();
+  if (grep(/^cluster$/, @nodes)) {
+    $conntrackd_service = "primary-secondary";
+  }
+  $services = join " ", ($services, "$conntrackd_service") if defined $conntrackd_service;
   my $str =<<EOS;
 $primary $services
 EOS
@@ -372,6 +394,7 @@ sub print_str {
   $str .= "\n  pre-shared-secret $self->{_pre_shared}";
   $str .= "\n  keepalive-interval $self->{_keepalive_itvl}";
   $str .= "\n  dead-interval $self->{_dead_itvl}";
+  $str .= "\n  monitor-dead-interval $self->{_monitor_dead_itvl}";
   my $group;
   foreach $group (keys %{$self->{_groups}}) {
     $str .= "\n  group $group";
