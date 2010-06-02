@@ -365,6 +365,14 @@ delete_interface () {
 	iface="$2"
 	netmask="$3"
 
+  local sout=$($IP2UTIL -o -f inet addr show dev "$iface" 2>/dev/null \
+               | grep " $ipaddr/$netmask ")
+  if [ -z "$sout" ]; then
+    # IP/mask is not on the interface. nothing to do.
+    ocf_log info "$ipaddr/$netmask not on $iface. Nothing to delete."
+    return 0
+  fi
+
 	CMD="$IP2UTIL -f inet addr delete $ipaddr/$netmask dev $iface"
 
 	ocf_log info "$CMD"
