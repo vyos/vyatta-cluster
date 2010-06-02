@@ -1,3 +1,9 @@
+vyatta-cluster (0.11.9) unstable; urgency=low
+
+  * fix for bug 5134
+
+ -- An-Cheng Huang <ancheng@vyatta.com>  Wed, 02 Jun 2010 09:15:10 -0700
+
 vyatta-cluster (0.11.8) unstable; urgency=low
 
   * make clustering work with conntrack-sync
