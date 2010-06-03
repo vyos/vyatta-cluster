@@ -377,7 +377,7 @@ sub haresources {
   $config->setLevel('service conntrack-sync failover-mechanism');
   my @nodes = $config->listOrigPlusComNodes();
   if (grep(/^cluster$/, @nodes)) {
-    $conntrackd_service = "primary-secondary";
+    $conntrackd_service = "vyatta-cluster-conntracksync";
   }
   $services = join " ", ($services, "$conntrackd_service") if defined $conntrackd_service;
   my $str =<<EOS;
