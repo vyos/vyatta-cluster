@@ -1,3 +1,9 @@
+vyatta-cluster (0.11.10) unstable; urgency=low
+
+  * move cluster conntrack-sync script to vyatta-conntrack-sync package
+
+ -- Mohit Mehta <mohit.mehta@vyatta.com>  Thu, 03 Jun 2010 12:02:11 -0700
+
 vyatta-cluster (0.11.9) unstable; urgency=low
 
   * fix for bug 5134
