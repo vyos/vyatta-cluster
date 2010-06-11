@@ -22,7 +22,8 @@ if ($config->isEmpty()) {
   $vconfig->setLevel('service conntrack-sync failover-mechanism');
   my @nodes = $vconfig->listNodes();
   if (grep(/^cluster$/, @nodes)) {
-    print STDERR "cluster is being used as failover-mechanism in conntrack-sync\n";
+    print STDERR "Cluster is being used as failover-mechanism in conntrack-sync\n" .
+                 "It is either not configured or has been deleted!\n";
     exit 1;
   }
 
