@@ -89,7 +89,7 @@ if (!chmod(0600, "$HA_DIR/authkeys")) {
 
 # stop each service in case it is already started
 foreach (@init_services) {
-  system("$SERVICE_DIR/$_ stop");
+  system("$SERVICE_DIR/$_ stop >&/dev/null");
 }
 
 print "Starting clustering...";
