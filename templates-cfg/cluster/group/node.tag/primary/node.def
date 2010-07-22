@@ -1,2 +1,2 @@
 type: txt
-help: Set host name of the primary node [REQUIRED]
+help: Host name of the primary node [REQUIRED]

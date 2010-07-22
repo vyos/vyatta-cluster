@@ -1,6 +1,6 @@
 multi:
 type: txt
-help: Set IP address(es) or service name(s) in this resource group [REQUIRED]
+help: IP address(es) or service name(s) in this resource group [REQUIRED]
 comp_help: Possible completions:
   <service name>          Name of system service to be clustered
   <IP addr>/<prefix len>  IP address (with subnet mask length) to be clustered

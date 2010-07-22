@@ -1,3 +1,3 @@
 multi:
 type: ipv4
-help: Set IP address(es) for monitoring connectivity
+help: IP address(es) for monitoring connectivity
