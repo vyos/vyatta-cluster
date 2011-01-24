@@ -2,8 +2,4 @@ multi:
 type: txt
 help: IP address(es) or service name(s) in this resource group [REQUIRED]
 val_help: <service name>; Name of system service to be clustered
-val_help: <IP addr>/<prefix len>; IP address (with subnet mask length) to be clustered
-
-For IP addresses, additional parameters can optionally be specified:
-  <IP addr>/<prefix len>/<interface>
-  <IP addr>/<prefix len>/<interface>/<broadcast addr>
+val_help: <IP addr>/<prefix len>/<interface>; IP address (with subnet mask length and interface) to be clustered
