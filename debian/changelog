@@ -1,3 +1,9 @@
+vyatta-cluster (0.11.16+mendocino2) unstable; urgency=low
+
+  * add interface to help text
+
+ -- An-Cheng Huang <ancheng@vyatta.com>  Mon, 24 Jan 2011 14:02:44 -0800
+
 vyatta-cluster (0.11.16+mendocino1) unstable; urgency=low
 
   * new branch
