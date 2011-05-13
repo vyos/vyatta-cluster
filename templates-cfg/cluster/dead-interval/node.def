@@ -1,3 +1,5 @@
 type: u32
 help: Interval after which a node is considered dead after missing heartbeats (milliseconds)
+val_help: u32: 1-29999; Interval after which a node is considered dead after missing heartbeats (milliseconds) 
+syntax:expression: ($VAR(@) >= 1 && $VAR(@) < 30000) ; "Value must be between 1 and 29,999"
 default: 20000

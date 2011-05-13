@@ -1,3 +1,5 @@
 type: u32
 help: Interval after which a monitor node is considered dead (milliseconds)
+val_help: u32: 1-29999; Interval after which a monitor node is considered dead (milliseconds)
+syntax:expression: ($VAR(@) >= 1 && $VAR(@) < 30000) ; "Value must be between 1 and 29,999"
 default: 20000
