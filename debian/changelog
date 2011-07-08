@@ -1,3 +1,9 @@
+vyatta-cluster (0.11.19+napa1) unstable; urgency=low
+
+  * new branch
+
+ -- Deepti Kulkarni <deepti@vyatta.com>  Thu, 07 Jul 2011 20:48:01 -0700
+
 vyatta-cluster (0.11.19) unstable; urgency=low
 
   * fix for 6107. added val_help for correct u32 range.
