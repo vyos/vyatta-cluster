@@ -1,3 +1,9 @@
+vyatta-cluster (0.11.22) unstable; urgency=low
+
+  * Added missing validation for force cluster standby command.
+
+ -- Deepti Kulkarni <deepti@vyatta.com>  Wed, 27 Jul 2011 09:19:26 -0700
+
 vyatta-cluster (0.11.21) unstable; urgency=low
 
   * Added op-mode commands
