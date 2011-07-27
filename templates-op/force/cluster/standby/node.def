@@ -1,0 +1,3 @@
+help: Release cluster resources and allow a remote to become master
+run: sudo /usr/share/heartbeat/hb_standby >&/dev/null 
+     echo "Attempting to release cluster resources."
