@@ -8,7 +8,7 @@ run: local -a grp ;
          echo "Warning: Auto-failback is configured."
        fi
        sudo /usr/share/heartbeat/hb_takeover >&/dev/null
-       echo "Requesting to take over cluster resources."
+       echo "Requesting to take over cluster resources"
      else
-       echo "Clustering is not configured."
+       echo "Clustering is not configured"
      fi

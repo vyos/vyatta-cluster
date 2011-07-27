@@ -1,3 +1,9 @@
 help: Release cluster resources and allow a remote to become master
-run: sudo /usr/share/heartbeat/hb_standby >&/dev/null 
-     echo "Attempting to release cluster resources."
+run: local -a grp ;
+     eval "grp=($(cli-shell-api listActiveNodes cluster group))"
+     if [ -n "$grp" ]; then
+       sudo /usr/share/heartbeat/hb_standby >&/dev/null 
+       echo "Attempting to release cluster resources"
+     else
+       echo "Clustering is not configured"
+     fi
