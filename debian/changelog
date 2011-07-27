@@ -1,3 +1,9 @@
+vyatta-cluster (0.11.21) unstable; urgency=low
+
+  * Added op-mode commands
+
+ -- Deepti Kulkarni <deepti@vyatta.com>  Wed, 27 Jul 2011 07:52:34 -0700
+
 vyatta-cluster (0.11.20) unstable; urgency=low
 
   * new branch
