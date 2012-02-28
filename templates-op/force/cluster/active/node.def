@@ -1,12 +1,7 @@
 help: Attempt to take over cluster resources and become the active node
 run: local -a grp ;
-     local -a params ;
      eval "grp=($(cli-shell-api listActiveNodes cluster group))"
      if [ -n "$grp" ]; then
-       params=($(cli-shell-api returnActiveValue cluster group $grp auto-failback))
-       if [ "$params" == "true" ]; then
-         echo "Warning: Auto-failback is configured."
-       fi
        sudo /usr/share/heartbeat/hb_takeover >&/dev/null
        echo "Requesting to take over cluster resources"
      else
