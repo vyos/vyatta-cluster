@@ -1,3 +1,9 @@
+vyatta-cluster (0.11.23) unstable; urgency=low
+
+  * fix 3238 - Removed auto-failback configuration warning.
+
+ -- Deepti Kulkarni <deepti@vyatta.com>  Tue, 28 Feb 2012 03:37:17 -0800
+
 vyatta-cluster (0.11.22) unstable; urgency=low
 
   * Added missing validation for force cluster standby command.
