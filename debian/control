@@ -1,7 +1,7 @@
 Source: vyatta-cluster
 Section: contrib/net
 Priority: extra
-Maintainer: Vyatta Package Maintainers <maintainers@vyatta.com>
+Maintainer: VyOS Package Maintainers <maintainers@vyos.net>
 Build-Depends: debhelper (>= 5), autotools-dev
 Standards-Version: 3.7.2
 
@@ -11,5 +11,5 @@ Depends: vyatta-cfg (>= 0.15.33),
  vyatta-bash | bash (>= 3.1),
  vyatta-op,
  heartbeat(>=2.1.2-1)
-Description: Vyatta configuration/operational commands for clustering
- Vyatta configuration and operational templates and scripts for clustering
+Description: VyOS configuration/operational commands for clustering
+ VyOS configuration and operational templates and scripts for clustering
