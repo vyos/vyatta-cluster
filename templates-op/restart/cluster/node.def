@@ -1,0 +1,10 @@
+help: Restart cluster node
+
+run:
+    if cli-shell-api existsEffective cluster; then
+	echo -n "Restarting cluster node..."
+	sudo /etc/init.d/heartbeat restart >&/dev/null
+	if [[ $? -eq 0 ]]; then
+	  echo "Success!"
+	fi
+    fi
