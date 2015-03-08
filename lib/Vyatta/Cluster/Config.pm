@@ -174,9 +174,17 @@ sub check_interfaces {
         next if ($exist_only);
 
         my $link = `ip link show $_ | grep $_`;
-        if (($link =~ /NO-CARRIER/) || !($link =~ /,UP/)) {
-            return "interface $_ is not connected";
+        my $link_test = 0;
+        
+        while (($link =~ /NO-CARRIER/) || !($link =~ /,UP/)) {
+            $link_test++;
+            sleep(1);
+            $link = `ip link show $_ | grep $_`;
+            if ($link_test >= 10) {
+                return "interface $_ is not connected";
+            }
         }
+        
         system("ip addr show dev $_ |grep 'inet ' |grep -q 'scope global'");
         if ($? >> 8) {
             return "interface $_ is not configured";
