@@ -1,3 +1,12 @@
+vyatta-cluster (0.11.25+vyos2+lithium3) unstable; urgency=low
+
+  [ Alex Harpin ]
+  * vyatta-cluster: add op mode restart command for clustering
+  * vyatta-cluster: formatting changes for style consistency
+  * vyatta-cluster: wait for link up on clustering for up to 10 seconds
+
+ -- Alex Harpin <development@landsofshadow.co.uk>  Mon, 09 Mar 2015 08:49:28 +0000
+ 
 vyatta-cluster (0.11.25+vyos2+lithium2) unstable; urgency=low
 
   * Update maintainer address
