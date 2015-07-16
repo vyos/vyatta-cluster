@@ -1,0 +1,3 @@
+multi:
+type: txt
+help: <interface>:<ip> The ucast directive configures Heartbeat to communicate over a UDP unicast communications link. Note if ucast is used then mcast is disabled 
