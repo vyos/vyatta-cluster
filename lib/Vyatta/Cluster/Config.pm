@@ -25,6 +25,7 @@ my %fields = (
     _keepalive_itvl     => undef,
     _dead_itvl          => undef,
     _monitor_dead_itvl  => undef,
+    _ucast		          => undef,
     _groups             => {},
     _is_empty           => 1,
 );
@@ -58,6 +59,8 @@ sub setup {
     $self->{_keepalive_itvl} = $config->returnValue("keepalive-interval");
     $self->{_dead_itvl} = $config->returnValue("dead-interval");
     $self->{_monitor_dead_itvl} = $config->returnValue("monitor-dead-interval");
+    @tmp = $config->returnValues("ucast");
+    $self->{_ucast} = [ @tmp ];
 
     $config->setLevel("$level group");
     my @groups = $config->listNodes();
@@ -99,6 +102,8 @@ sub setupOrig {
     $self->{_keepalive_itvl} = $config->returnOrigValue("keepalive-interval");
     $self->{_dead_itvl} = $config->returnOrigValue("dead-interval");
     $self->{_monitor_dead_itvl} = $config->returnOrigValue("monitor-dead-interval");
+    @tmp = $config->returnOrigValues("ucast");
+    $self->{_ucast} = [ @tmp ];
 
     $config->setLevel("$level group");
     my @groups = $config->listOrigNodes();
@@ -175,7 +180,7 @@ sub check_interfaces {
 
         my $link = `ip link show $_ | grep $_`;
         my $link_test = 0;
-        
+
         while (($link =~ /NO-CARRIER/) || !($link =~ /,UP/)) {
             $link_test++;
             sleep(1);
@@ -184,7 +189,7 @@ sub check_interfaces {
                 return "interface $_ is not connected";
             }
         }
-        
+
         system("ip addr show dev $_ |grep 'inet ' |grep -q 'scope global'");
         if ($? >> 8) {
             return "interface $_ is not configured";
@@ -206,9 +211,21 @@ sub ha_cf {
     }
     my $interfaces = '';
     foreach my $intf (@{$self->{_interface}}) {
-        $interfaces .= "mcast $intf ";
-        $interfaces .= ((defined($self->{_mcast_grp}))?  "$self->{_mcast_grp} " : "$DEFAULT_MCAST_GROUP ");
-        $interfaces .= "$DEFAULT_UDP_PORT $DEFAULT_TTL 0\n";
+      if (defined($self->{_ucast}) && scalar(@{$self->{_ucast}}) > 0  ) {
+  	     foreach my $ucast (@{$self->{_ucast}}) {
+  		       my ($uintf,$upip) = split(/:/,$ucast);
+  		       if ($uintf eq $intf) {
+  			       $interfaces .= "ucast $intf $upip\n";
+  		       } else {
+               return (undef, "$intf is not a valid interface");
+             }
+  	     }
+      } else {
+      	$interfaces .= "mcast $intf ";
+      	$interfaces .= ((defined($self->{_mcast_grp}))
+                      ?  "$self->{_mcast_grp} " : "$DEFAULT_MCAST_GROUP ");
+      	$interfaces .= "$DEFAULT_UDP_PORT $DEFAULT_TTL 0\n";
+      }
     }
 
     my $kitvl = $self->{_keepalive_itvl};
