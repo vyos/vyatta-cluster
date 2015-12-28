@@ -20,6 +20,7 @@ my $HA_WATCHLINK_ID = 'ha';
 
 my %fields = (
     _interface          => undef,
+    _peers              => undef,
     _mcast_grp          => undef,
     _pre_shared         => undef,
     _keepalive_itvl     => undef,
@@ -58,6 +59,17 @@ sub setup {
     $self->{_keepalive_itvl} = $config->returnValue("keepalive-interval");
     $self->{_dead_itvl} = $config->returnValue("dead-interval");
     $self->{_monitor_dead_itvl} = $config->returnValue("monitor-dead-interval");
+
+    $config->setLevel("$level interface");
+    $self->{_interface} = [ $config->listNodes() ];
+    my @interfaces = $config->listNodes();
+    my $int;
+    my %hash;
+    for $int (@interfaces) {
+      $config->setLevel("$level interface $int");
+      %hash = ( %hash, $int => $config->returnValue("peer"));
+    }
+    $self->{_peers} = \%hash;
 
     $config->setLevel("$level group");
     my @groups = $config->listNodes();
@@ -99,6 +111,17 @@ sub setupOrig {
     $self->{_keepalive_itvl} = $config->returnOrigValue("keepalive-interval");
     $self->{_dead_itvl} = $config->returnOrigValue("dead-interval");
     $self->{_monitor_dead_itvl} = $config->returnOrigValue("monitor-dead-interval");
+
+    $config->setLevel("$level interface");
+    $self->{_interface} = [ $config->listNodes() ];
+    my @interfaces = $config->listNodes();
+    my $int;
+    my %hash;
+    for $int (@interfaces) {
+      $config->setLevel("$level interface $int");
+      %hash = ( %hash, $int => $config->returnValue("peer"));
+    }
+    $self->{_peers} = \%hash;
 
     $config->setLevel("$level group");
     my @groups = $config->listOrigNodes();
@@ -206,9 +229,14 @@ sub ha_cf {
     }
     my $interfaces = '';
     foreach my $intf (@{$self->{_interface}}) {
+      if (defined($self->{_peers})) {
+        $interfaces .= "ucast $intf ";
+        $interfaces .= "$self->{_peers}->{$intf}\n";
+      } else {
         $interfaces .= "mcast $intf ";
         $interfaces .= ((defined($self->{_mcast_grp}))?  "$self->{_mcast_grp} " : "$DEFAULT_MCAST_GROUP ");
         $interfaces .= "$DEFAULT_UDP_PORT $DEFAULT_TTL 0\n";
+      }
     }
 
     my $kitvl = $self->{_keepalive_itvl};
