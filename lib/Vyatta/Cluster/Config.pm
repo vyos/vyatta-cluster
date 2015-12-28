@@ -113,13 +113,13 @@ sub setupOrig {
     $self->{_monitor_dead_itvl} = $config->returnOrigValue("monitor-dead-interval");
 
     $config->setLevel("$level interface");
-    $self->{_interface} = [ $config->listNodes() ];
-    my @interfaces = $config->listNodes();
+    $self->{_interface} = [ $config->listOrigNodes() ];
+    my @interfaces = $config->listOrigNodes();
     my $int;
     my %hash;
     for $int (@interfaces) {
       $config->setLevel("$level interface $int");
-      %hash = ( %hash, $int => $config->returnValue("peer"));
+      %hash = ( %hash, $int => $config->returnOrigValue("peer"));
     }
     $self->{_peers} = \%hash;
 
