@@ -106,7 +106,7 @@ sub setupOrig {
     $self->{_is_empty} = 0;
   }
 
-  my @tmp = $config->returnValues("interface");
+  my @tmp = $config->returnOrigValues("interface");
   $self->{_interface} = [@tmp];
   $self->{_mcast_grp} = $config->returnOrigValue("mcast-group");
   $self->{_pre_shared} = $config->returnOrigValue("pre-shared-secret");
@@ -115,13 +115,13 @@ sub setupOrig {
   $self->{_monitor_dead_itvl} = $config->returnOrigValue("monitor-dead-interval");
 
   $config->setLevel("$level interface");
-  $self->{_interface} = [ $config->listNodes() ];
-  my @interfaces = $config->listNodes();
+  $self->{_interface} = [ $config->listOrigNodes() ];
+  my @interfaces = $config->listOrigNodes();
   my $int;
   my %hash;
   for $int (@interfaces) {
     $config->setLevel("$level interface $int");
-    %hash = ( %hash, $int => $config->returnValue("peer"));
+    %hash = ( %hash, $int => $config->returnOrigValue("peer"));
   }
   $self->{_peers} = \%hash;
 
