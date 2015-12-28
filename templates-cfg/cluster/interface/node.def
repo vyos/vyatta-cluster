@@ -1,3 +1,4 @@
-multi:
+tag:
 type: txt
 help: Interface(s) for sending/receiving heartbeat packets [REQUIRED]
+allowed: ${vyatta_sbindir}/vyatta-interfaces.pl --show all
