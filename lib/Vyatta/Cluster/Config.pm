@@ -223,7 +223,6 @@ sub ha_cf {
   }
   my $interfaces = '';
   foreach my $intf (@{$self->{_interface}}) {
-    print "$intf \n";
     if (defined($self->{_peers})) {
       $interfaces .= "ucast $intf ";
       $interfaces .= "$self->{_peers}->{$intf}\n";
