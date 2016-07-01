@@ -1,0 +1,5 @@
+type: txt
+help: Heartbeat communication method
+syntax:expression: $VAR(@) in "multicast", "broadcast"; "\"$VAR(@)\" is not a valid communication method"
+default: "multicast"
+allowed: echo multicast broadcast

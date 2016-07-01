@@ -15,6 +15,7 @@ my $RESOURCE_SCRIPT_DIR = "/etc/ha.d/resource.d";
 my $DEFAULT_MCAST_GROUP = '239.251.252.253';
 my $DEFAULT_UDP_PORT = '694';
 my $DEFAULT_TTL = '1';
+my $DEFAULT_MODE = 'mcast';
 
 my $HA_WATCHLINK_ID = 'ha';
 
@@ -25,6 +26,7 @@ my %fields = (
   _keepalive_itvl   	=> undef,
   _dead_itvl        	=> undef,
   _monitor_dead_itvl	=> undef,
+  _mode             	=> undef,
   _groups           	=> {},
   _is_empty         	=> 1,
 );
@@ -60,6 +62,7 @@ sub setup {
   $self->{_keepalive_itvl} = $config->returnValue("keepalive-interval");
   $self->{_dead_itvl} = $config->returnValue("dead-interval");
   $self->{_monitor_dead_itvl} = $config->returnValue("monitor-dead-interval");
+  $self->{_mode} = $config->returnValue("mode");
 
   $config->setLevel("$level group");
   my @groups = $config->listNodes();
@@ -101,6 +104,7 @@ sub setupOrig {
   $self->{_keepalive_itvl} = $config->returnOrigValue("keepalive-interval");
   $self->{_dead_itvl} = $config->returnOrigValue("dead-interval");
   $self->{_monitor_dead_itvl} = $config->returnOrigValue("monitor-dead-interval");
+  $self->{_mode} = $config->returnOrigValue("mode");
 
   $config->setLevel("$level group");
   my @groups = $config->listOrigNodes();
@@ -200,10 +204,21 @@ sub ha_cf {
   }
   my $interfaces = '';
   foreach my $intf (@{$self->{_interface}}) {
-    $interfaces .= "mcast $intf ";
-    $interfaces .= ((defined($self->{_mcast_grp}))
-                    ?  "$self->{_mcast_grp} " : "$DEFAULT_MCAST_GROUP ");
-    $interfaces .= "$DEFAULT_UDP_PORT $DEFAULT_TTL 0\n";
+    my %mode_xlate = (
+      multicast => "mcast",
+      broadcast => "bcast",
+    );
+
+    my $mode = defined($self->{_mode}) ? $mode_xlate{$self->{_mode}} : $DEFAULT_MODE;
+    
+    if($mode eq "mcast") {
+      $interfaces .= "$mode $intf ";
+      $interfaces .= ((defined($self->{_mcast_grp}))
+                      ?  "$self->{_mcast_grp} " : "$DEFAULT_MCAST_GROUP ");
+      $interfaces .= "$DEFAULT_UDP_PORT $DEFAULT_TTL 0\n";
+    } elsif($mode eq "bcast") {
+        $interfaces .= "$mode $intf\n";
+    }
   }
 
   my $kitvl = $self->{_keepalive_itvl};
@@ -390,6 +405,7 @@ EOS
 sub print_str {
   my ($self) = @_;
   my $str = "cluster";
+  $str .= "\n  mode $self->{_mode}";
   $str .= "\n  interface " . (join ",", @{$self->{_interface}});
   $str .= "\n  pre-shared-secret $self->{_pre_shared}";
   $str .= "\n  keepalive-interval $self->{_keepalive_itvl}";
