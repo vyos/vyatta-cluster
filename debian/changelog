@@ -1,3 +1,15 @@
+vyatta-cluster (0.11.25+vyos1+helium2) unstable; urgency=low
+
+  [Alex Harpin]
+  * Update maintainer address
+  * vyatta-cluster: add op mode restart command for clustering
+  * vyatta-cluster: formatting changes for style consistency
+  * vyatta-cluster: wait for link up on clustering for up to 10 seconds
+
+  [Yuya Kusakabe]
+
+ -- Yuya Kusakabe <yuya.kusakabe@gmail.com>  Sun, 20 Aug 2017 23:51:30 +0900
+
 vyatta-cluster (0.11.25+vyos1+helium1) unstable; urgency=low
 
   * New branch
