@@ -1,3 +1,9 @@
+vyatta-cluster (1.2.0-1) stable; urgency=medium
+
+  * New branch.
+
+ -- Daniil Baturin <daniil@baturin.org>  Fri, 28 Sep 2018 21:49:26 +0200
+
 vyatta-cluster (0.11.25+vyos2+current1) unstable; urgency=medium
 
   [ Thomas Jepp ]
