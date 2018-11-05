@@ -356,9 +356,9 @@ sub haresources {
 
     # this forces all ip addresses to be before all services, which may not
     # be the desirable behavior in all cases.
-    my $ip_str = join " ", @ip_addresses;
-    my $serv_str = join " ", @init_services;
-    my $services = join " ", ($ip_str, $serv_str);
+    my $ip_str = join "\\\n ", @ip_addresses;
+    my $serv_str = join "\\\n ", @init_services;
+    my $services = join "\\\n ", ($ip_str, $serv_str);
     return (undef, "cluster primary system not defined") if (!defined($primary));
     return (undef, "cluster service(s) not defined") if ($services eq "");
 
