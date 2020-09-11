@@ -1,3 +1,9 @@
+vyatta-cluster (1.2.6) unstable; urgency=low
+
+  * New release.
+
+ -- VyOS maintainers <maintainers@vyos.io>  Fri, 11 Sep 2020 04:32:14 +0300
+
 vyatta-cluster (1.2.5) unstable; urgency=low
 
   * New release.
