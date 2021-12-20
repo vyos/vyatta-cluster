@@ -8,6 +8,7 @@ use Vyatta::Cluster::Config;
 my $HA_DIR = "/etc/ha.d";
 my $HA_INIT = "/etc/init.d/heartbeat";
 my $SERVICE_DIR = "/etc/init.d";
+my $RUN_DIR = "/run/heartbeat";
 
 my $conntrackd_service = undef;
 GetOptions("conntrackd_service=s"         => \$conntrackd_service,
@@ -53,7 +54,7 @@ if (defined($err)) {
   exit 1;
 }
 
-my $ret = system("mkdir -p $HA_DIR");
+my $ret = system("mkdir -p $HA_DIR && mkdir -p $RUN_DIR");
 if ($ret >> 8) {
   print STDERR "Error: cannot create $HA_DIR\n";
   exit 1;
